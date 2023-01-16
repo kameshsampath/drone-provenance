@@ -1,0 +1,18 @@
+kind: pipeline
+type: docker
+name: default
+
+steps:
+- name: build
+  image: golang:1.19
+  environment:
+    CGO_ENABLED: 0
+  commands:
+  - go build -o app
+- name: build image
+  image: kameshsampath/kube-dev-tools:0.1.5
+  environment:
+    KO_DOCKER_REPO: k3d-myregistry.localhost:5001/example/app
+  commands:
+    - |
+      ko build --platform=linux/arm64 .
